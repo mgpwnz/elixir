@@ -51,7 +51,13 @@ if ! docker --version; then
 	fi
 cd $HOME
 mkdir elixir && cd elixir
-wget -qO- https://files.elixir.finance/Dockerfile &&\
+wget -q O- Dockerfile https://files.elixir.finance/Dockerfile 
+read -p "Enter wallet address: " EVM_WALLET_ADDRESS
+sed -i -e "s%ENV ADDRESS=0x.*%ENV ADDRESS=$EVM_WALLET_ADDRESS%g" $HOME/elixir/Dockerfile
+read -p "Enter Private Key: " EVM_PK
+sed -i -e "s%ENV PRIVATE_KEY=0x.*%ENV PRIVATE_KEY=0x$EVM_PK%g" $HOME/elixir/Dockerfile
+read -p "Enter Validator Name: " Name
+sed -i -e "s%ENV VALIDATOR_NAME=AnonValidator.*%ENV VALIDATOR_NAME=$Name%g" $HOME/elixir/Dockerfile
 docker build . -f Dockerfile -t elixir-validator &&\
 docker run -d --restart unless-stopped --name ev elixir-validator
 sleep 2
