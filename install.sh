@@ -36,7 +36,7 @@ docker build . -f Dockerfile -t elixir-validator &&\
 docker run -d --restart unless-stopped --name ev elixir-validator
 sleep 2
 cd
-echo Done!
+echo Installed!
 
 }
 uninstall() {
@@ -45,7 +45,7 @@ docker kill ev &&\
 docker rm ev &&\
 rm -rf $HOME/elixir
 cd $HOME
-echo Done!
+echo Remove!
 }
 update() {
 sudo apt update &> /dev/null
@@ -56,6 +56,7 @@ docker pull elixirprotocol/validator:testnet-2
 docker build . -f Dockerfile -t elixir-validator &&\
 docker run -d --restart unless-stopped --name ev elixir-validator
 cd $HOME
+echo Update!
 }
 # Actions
 sudo apt install wget -y &>/dev/null
