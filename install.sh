@@ -50,7 +50,7 @@ if ! docker --version; then
 		. $HOME/.bash_profile
 	fi
 cd $HOME
-mkdir elixir && cd elixir
+mkdir $HOME/elixir && cd $HOME/elixir
 wget -q O- Dockerfile https://files.elixir.finance/Dockerfile 
 read -p "Enter wallet address: " EVM_WALLET_ADDRESS
 sed -i -e "s%ENV ADDRESS=0x.*%ENV ADDRESS=$EVM_WALLET_ADDRESS%g" $HOME/elixir/Dockerfile
@@ -66,33 +66,20 @@ echo Done!
 
 }
 uninstall() {
-sudo systemctl disable subspace-farmer.service
-sudo systemctl disable subspace-node.service
-sudo rm /etc/systemd/system/subspace-farmer.service /etc/systemd/system/subspace-node.service
-sudo rm /usr/local/bin/subspace-farmer /usr/local/bin/subspace-node 
-sudo rm -rf $HOME/subspace_adv $HOME/.local/share/subspace-node/
-echo "Done"
 cd $HOME
+docker kill ev &&\
+docker rm ev &&\
+rm -rf $HOME/elixir
+cd $HOME
+echo Done!
 }
 update() {
-cd $HOME
 sudo apt update &> /dev/null
-sudo apt install wget -y &> /dev/null
-sudo apt-get install libgomp1 -y &> /dev/null
-#download cli
-wget https://github.com/subspace/subspace/releases/download/${version}/subspace-node-ubuntu-x86_64-skylake-${version} &> /dev/null
-wget https://github.com/subspace/subspace/releases/download/${version}/subspace-farmer-ubuntu-x86_64-skylake-${version} &> /dev/null
-sleep 1
-sudo mv subspace-node-ubuntu-x86_64-skylake-${version} /usr/local/bin/subspace-node
-sudo mv subspace-farmer-ubuntu-x86_64-skylake-${version} /usr/local/bin/subspace-farmer
-sudo chmod +x /usr/local/bin/subspace*
-sleep 1
-# Enabling services
-    sudo systemctl daemon-reload
-# Starting services
-    sudo systemctl restart subspace-node.service
-    sudo systemctl restart subspace-farmer.service
-echo -e "Your subspace node \e[32mUpdate\e[39m!"
+cd $HOME/elixir
+docker kill ev
+docker rm ev
+docker pull elixirprotocol/validator:testnet-2
+docker build . -f Dockerfile -t elixir-validator
 cd $HOME
 }
 # Actions
