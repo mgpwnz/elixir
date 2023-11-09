@@ -53,7 +53,8 @@ cd $HOME/elixir
 docker kill ev
 docker rm ev
 docker pull elixirprotocol/validator:testnet-2
-docker build . -f Dockerfile -t elixir-validator
+docker build . -f Dockerfile -t elixir-validator &&\
+docker run -d --restart unless-stopped --name ev elixir-validator
 cd $HOME
 }
 # Actions
