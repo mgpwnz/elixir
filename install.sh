@@ -43,11 +43,13 @@ function check_empty {
 function confirm_input {
   echo "You have entered the following information:"
   echo "Node Name: $NAME"
-  echo "Wallet Adress: $WA"
+  echo "Wallet Address: $WA"
   echo "Private Key: $PK"
   
   read -p "Is this information correct? (yes/no): " CONFIRM
-  if [ "$CONFIRM" != "yes" ]; then
+  CONFIRM=$(echo "$CONFIRM" | tr '[:upper:]' '[:lower:]')
+  
+  if [ "$CONFIRM" != "yes" ] && [ "$CONFIRM" != "y" ]; then
     echo "Let's try again..."
     return 1 
   fi
