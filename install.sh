@@ -93,7 +93,7 @@ networks:
 
 EOF
 #env
-tee $HOME/chasm/.env > /dev/null <<EOF
+tee $HOME/elixir/.env > /dev/null <<EOF
 ENV=testnet-3
 
 STRATEGY_EXECUTOR_IP_ADDRESS=`wget -qO- eth0.me`
