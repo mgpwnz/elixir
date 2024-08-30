@@ -80,7 +80,7 @@ name: elixir
 
 services:
   node:
-    image: elixirprotocol/validator:3.1.0
+    image: elixirprotocol/validator:v3
     restart: always
     env_file:
       - ./.env
