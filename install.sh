@@ -9,6 +9,10 @@ while test $# -gt 0; do
             function="install"
             shift
             ;;
+        -up|--update)
+            function="update"
+            shift
+            ;;
         -un|--uninstall)
             function="uninstall"
             shift
@@ -105,6 +109,12 @@ SIGNER_PRIVATE_KEY=$PK
 EOF
 #Run nnode
 docker compose -f $HOME/elixir/docker-compose.yml up -d
+}
+update() {
+docker compose -f $HOME/elixir/docker-compose.yml down
+docker compose -f $HOME/elixir/docker-compose.yml pull
+docker compose -f $HOME/elixir/docker-compose.yml up -d
+
 }
 uninstall() {
 if [ ! -d "$HOME/elixir" ]; then
