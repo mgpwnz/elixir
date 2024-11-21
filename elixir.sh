@@ -101,7 +101,7 @@ install() {
         ENV='prod'
     else
         REPO='v3'
-        ENV='testnet-3'
+        ENV='testnet'
     fi
 
 # Create script 
@@ -156,7 +156,7 @@ switch_network() {
         NEW_ENV="prod"
         NEW_REPO="latest"
     elif [[ "$NETWORK" == "testnet" ]]; then
-        NEW_ENV="testnet-3"
+        NEW_ENV="testnet"
         NEW_REPO="v3"
     else
         echo "Invalid choice. Please choose 'mainnet' or 'testnet'."
@@ -179,10 +179,26 @@ switch_network() {
 
 # Main functions for update and uninstall
 update() {
+    
+    if grep -q "ENV=testnet" "$HOME/elixir/.env"; then
+        REPO="elixirprotocol/validator:testnet"
+    else
+        REPO="elixirprotocol/validator"
+    fi
+
+    echo "Updating node to latest version for $REPO..."
+
     docker compose -f $HOME/elixir/docker-compose.yml down
-    docker compose -f $HOME/elixir/docker-compose.yml pull
+
+    docker pull $REPO
+
+    sed -i "s|image: elixirprotocol/validator:.*|image: $REPO|" "$HOME/elixir/docker-compose.yml"
+
     docker compose -f $HOME/elixir/docker-compose.yml up -d
+
+    echo "Node has been updated successfully."
 }
+
 
 uninstall() {
     if [ -d "$HOME/elixir" ]; then
